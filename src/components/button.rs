@@ -37,9 +37,15 @@ impl Component for Button {
     fn view(&self, ctx: &Context<Self>) -> Html {
 
         html!{
-            <button class={if self.cell.is_hidden() {"button-hidden"} else {"button-shown"} } onclick={self.link.callback(|_| Msg::Clicked)}>
+
+            <button 
+                class={if self.cell.is_hidden() {"button-hidden"} else {"button-shown"}}
+                onclick={self.link.callback(|_| Msg::Clicked)}
+                // oncontextmenu={self.link.callback(|_| Msg::Clicked)}
+                oncontextmenu={self.link.callback(|_| Msg::Clicked)}>
                 { &self.cell.to_string() }
             </button>
+
         }
     }
 
@@ -47,10 +53,10 @@ impl Component for Button {
         match msg {
             Msg::Clicked => {
                 // info!("hid (from cell): {}", format!("{:?}", self.cell.is_hidden()));
-                self.onsignal.emit(self.cell)
+                self.onsignal.emit(self.cell);
             }
         }
-        true
+        false
     }
 
     fn changed(&mut self, ctx: &Context<Self>, _old_props: &Self::Properties) -> bool {

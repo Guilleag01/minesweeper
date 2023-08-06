@@ -62,10 +62,10 @@ impl Component for BoardComponent {
         match msg {
             Msg::Discover {cell} => {
                 // info!("Pos (from board): {}", format!("{:?}", cell.get_pos()));
-                self.onsignal.emit(cell)
+                self.onsignal.emit(cell);
             }
         }
-        true
+        false
     }
 
     fn changed(&mut self, ctx: &Context<Self>, _old_props: &Self::Properties) -> bool {

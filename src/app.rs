@@ -41,7 +41,7 @@ impl Component for App {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let mut game = Game::new(25, 40, 50);
+        let mut game = Game::new(10, 10, 5);
         game.start_board();
 
         info!("\n{}", game.get_board().to_string());
