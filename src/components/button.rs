@@ -44,7 +44,7 @@ impl Component for Button {
                 class={if self.cell.is_hidden() {"button-hidden"} else {"button-shown"}}
                 onclick={self.link.callback(|_| Msg::Clicked)}
                 // oncontextmenu={self.link.callback(|_| Msg::Clicked)}
-                oncontextmenu={self.link.callback(|_| Msg::RightClicked)}
+                oncontextmenu={self.link.callback(|e: MouseEvent| {drop(e); Msg::RightClicked})}
                 // style={(if !self.cell.is_hidden() {format!("background-color: #2f2f2f; transition: background-color 0.5s; transition-delay: {}s;", self.cell.get_delay())} else {"".to_string()}).as_str()}
                 style={style}>
                 { &self.cell.to_string() }
@@ -59,6 +59,9 @@ impl Component for Button {
                 // info!("hid (from cell): {}", format!("{:?}", self.cell.is_hidden()));
                 self.onsignal.emit(self.cell);
             }
+            Msg::RightClicked => {
+                self.onsignal.emit(self.cell);
+            },
         }
         false
     }

@@ -33,7 +33,7 @@ impl Component for App {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let mut game = Game::new(50, 40, 200);
+        let mut game = Game::new(10, 10, 10);
         game.start_board();
 
         // info!("\n{}", game.get_board().to_string());
