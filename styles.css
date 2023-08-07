@@ -68,7 +68,7 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   font-weight: 500;
-  color: #ffffff;
+  color: #0f0f0f98;
   background-color: #0f0f0f98;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   height: 50px;
@@ -86,7 +86,7 @@ button {
   border: 1px solid transparent;
   font-size: 20px;
   font-weight: 500;
-  color: #ffffff;
+  /* color: #2f2f2f; */
   background-color: #2f2f2f;
   height: 50px;
   width: 50px;
@@ -119,7 +119,7 @@ button {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: #f6f6f6;
+    /* color: #f6f6f6; */
     background-color: #2f2f2f;
   }
 

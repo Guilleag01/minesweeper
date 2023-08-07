@@ -4,7 +4,8 @@ pub struct Cell {
     mine: bool,
     value: usize,
     hidden: bool,
-    flagged: bool
+    flagged: bool,
+    delay: f32
 }
 
 impl Cell {
@@ -14,7 +15,8 @@ impl Cell {
             mine: false,
             value: 0,
             hidden: true,
-            flagged: false
+            flagged: false,
+            delay: 0.0
         };
     }
 
@@ -52,6 +54,14 @@ impl Cell {
 
     pub fn set_flag(&mut self, new_flag: bool) {
         self.flagged = new_flag;
+    }
+
+    pub fn get_delay(&self) -> f32 {
+        self.delay
+    }
+
+    pub fn set_delay(&mut self, delay: f32) {
+        self.delay = delay;
     }
 
 }

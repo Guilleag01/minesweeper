@@ -80,6 +80,9 @@ impl Board {
         self.board[pos.0][pos.1].show();
     }
 
+    pub fn set_delay(&mut self, pos: (usize, usize), delay: f32) {
+        self.board[pos.0][pos.1].set_delay(delay)
+    }
 }
 
 impl ToString for Board {

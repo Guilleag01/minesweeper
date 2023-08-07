@@ -27,24 +27,16 @@ pub struct App {
     game: Game
 }
 
-
-// #[function_component(App)]
-// pub fn app() -> Html {
-//     html! {
-
-//     }
-// }
-
 impl Component for App {
     type Message = Msg;
 
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let mut game = Game::new(10, 10, 5);
+        let mut game = Game::new(50, 40, 200);
         game.start_board();
 
-        info!("\n{}", game.get_board().to_string());
+        // info!("\n{}", game.get_board().to_string());
 
         Self { 
             link: ctx.link().clone(),
@@ -69,7 +61,7 @@ impl Component for App {
                 self.game.show(cell.get_pos());
 
                 // info!("celhid  (from App): {}", format!("{:?}", self.game.get_cell(cell.get_pos()).is_hidden()));
-                info!("\n{}", self.game.get_board().to_string())
+                // info!("\n{}", self.game.get_board().to_string())
             }
         }
         true

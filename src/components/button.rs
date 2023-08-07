@@ -1,6 +1,4 @@
-
 use yew::{prelude::*, html::Scope};
-
 use crate::minesweeper::cell::Cell;
 
 use log::info;
@@ -14,6 +12,7 @@ pub struct Button {
 
 pub enum Msg {
     Clicked,
+    RightClicked
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -35,14 +34,19 @@ impl Component for Button {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-
+        let mut style = String::new();
+        if !self.cell.is_hidden() {
+            style = format!("background-color: #2f2f2f; color: #ffffff; transition: background-color 0.5s, color 0.5s; transition-delay: {}s, {}s;", self.cell.get_delay(), self.cell.get_delay());
+        }
         html!{
 
             <button 
                 class={if self.cell.is_hidden() {"button-hidden"} else {"button-shown"}}
                 onclick={self.link.callback(|_| Msg::Clicked)}
                 // oncontextmenu={self.link.callback(|_| Msg::Clicked)}
-                oncontextmenu={self.link.callback(|_| Msg::Clicked)}>
+                oncontextmenu={self.link.callback(|_| Msg::RightClicked)}
+                // style={(if !self.cell.is_hidden() {format!("background-color: #2f2f2f; transition: background-color 0.5s; transition-delay: {}s;", self.cell.get_delay())} else {"".to_string()}).as_str()}
+                style={style}>
                 { &self.cell.to_string() }
             </button>
 
