@@ -4,8 +4,8 @@ use crate::minesweeper::{board::Board, cell::Cell};
 
 use crate::components::button::Button;
 
-use log::info;
-use wasm_bindgen::JsValue;
+// use log::info;
+// use wasm_bindgen::JsValue;
 
 pub struct BoardComponent {
     link: Scope<Self>,
@@ -62,7 +62,7 @@ impl Component for BoardComponent {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Discover {cell} => {
                 self.onsignal.emit(cell);

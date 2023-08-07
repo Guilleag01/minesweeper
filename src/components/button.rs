@@ -1,8 +1,8 @@
 use yew::{prelude::*, html::Scope};
 use crate::minesweeper::cell::Cell;
 
-use log::info;
-use wasm_bindgen::JsValue;
+// use log::info;
+// use wasm_bindgen::JsValue;
 
 pub struct Button {
     link: Scope<Self>,
@@ -36,7 +36,7 @@ impl Component for Button {
         }
     }
 
-    fn view(&self, ctx: &Context<Self>) -> Html {
+    fn view(&self, _ctx: &Context<Self>) -> Html {
         let mut style = String::new();
         if !self.cell.is_hidden() {
             style = format!("background-color: #2f2f2f; color: #ffffff; transition: background-color 0.5s, color 0.5s; transition-delay: {}s, {}s;", self.cell.get_delay(), self.cell.get_delay());
@@ -46,7 +46,7 @@ impl Component for Button {
             <button 
                 class={if self.cell.is_hidden() {"button-hidden"} else {"button-shown"}}
                 onclick={self.link.callback(|_| Msg::Clicked)}
-                oncontextmenu={self.link.callback(|e: MouseEvent| {Msg::RightClicked})}
+                oncontextmenu={self.link.callback(|_| {Msg::RightClicked})}
                 style={style}>
                     if self.cell.is_flagged() {
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pennant-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -70,7 +70,7 @@ impl Component for Button {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Clicked => {
                 self.onsignal.emit(self.cell);

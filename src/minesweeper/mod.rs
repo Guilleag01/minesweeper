@@ -6,8 +6,8 @@ use cell::Cell;
 use rand::Rng;
 // use getrandom::getrandom;
 
-use log::info;
-use wasm_bindgen::JsValue;
+// use log::info;
+// use wasm_bindgen::JsValue;
 
 pub struct Game {
     board: Board,
