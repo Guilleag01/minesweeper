@@ -83,6 +83,10 @@ impl Board {
     pub fn set_delay(&mut self, pos: (usize, usize), delay: f32) {
         self.board[pos.0][pos.1].set_delay(delay)
     }
+
+    pub fn set_flag(&mut self, pos: (usize, usize), flag: bool) {
+        self.board[pos.0][pos.1].set_flag(flag)
+    }
 }
 
 impl ToString for Board {

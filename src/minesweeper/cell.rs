@@ -42,6 +42,7 @@ impl Cell {
 
     pub fn show(&mut self) {
         self.hidden = false;
+        self.flagged = false;
     }
 
     pub fn is_hidden(&self) -> bool {
@@ -53,6 +54,10 @@ impl Cell {
     }
 
     pub fn set_flag(&mut self, new_flag: bool) {
+        if !self.hidden {
+            self.flagged = false;
+            return;
+        }
         self.flagged = new_flag;
     }
 
@@ -72,11 +77,12 @@ impl ToString for Cell {
             return " ".to_string();
         }
         if self.is_mine() {
-            return "*".to_string();
+            return " ".to_string();
         }
         if self.value == 0 {
             return " ".to_string();
         }
+
         return self.value.to_string();
     }
 }

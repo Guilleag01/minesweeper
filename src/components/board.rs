@@ -10,17 +10,20 @@ use wasm_bindgen::JsValue;
 pub struct BoardComponent {
     link: Scope<Self>,
     board: Board,
-    onsignal: Callback<Cell>
+    onsignal: Callback<Cell>,
+    flagsignal: Callback<Cell>
 }
 
 pub enum Msg {
     Discover{ cell: Cell },
+    Flag{ cell: Cell }
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
     pub board: Board,
     pub onsignal: Callback<Cell>,
+    pub flagsignal: Callback<Cell>
 }
 
 impl Component for BoardComponent {
@@ -32,7 +35,8 @@ impl Component for BoardComponent {
         Self {
             link: ctx.link().clone(),
             board: ctx.props().board.clone(),
-            onsignal: ctx.props().onsignal.clone()
+            onsignal: ctx.props().onsignal.clone(),
+            flagsignal: ctx.props().flagsignal.clone()
         }
     }
 
@@ -47,7 +51,7 @@ impl Component for BoardComponent {
                         <>
                         {row.into_iter().map(|c| {
                             html! {
-                                <Button onsignal={self.link.callback(move |_| Msg::Discover{cell: c})} cell={c}/>
+                                <Button onsignal={self.link.callback(move |_| Msg::Discover{cell: c})} flagsignal={self.link.callback(move |_| Msg::Flag{cell: c})} cell={c}/>
                             } 
                         }).collect::<Html>()}
                         <br/>
@@ -61,8 +65,10 @@ impl Component for BoardComponent {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Discover {cell} => {
-                // info!("Pos (from board): {}", format!("{:?}", cell.get_pos()));
                 self.onsignal.emit(cell);
+            }
+            Msg::Flag {cell} => {
+                self.flagsignal.emit(cell);
             }
         }
         false
