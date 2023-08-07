@@ -1,3 +1,5 @@
+#[warn(unused_assignments)]
+
 // use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 // use wasm_bindgen_futures::spawn_local;
@@ -19,7 +21,8 @@ extern "C" {
 pub enum Msg {
     Discover{ cell: Cell },
     Flag{ cell: Cell },
-    Reset
+    Reset, 
+    ToggleSettings
 }
 
 pub struct App {
@@ -27,7 +30,8 @@ pub struct App {
     game: Game,
     height: usize,
     width: usize,
-    num_mines: usize
+    num_mines: usize,
+    show_settings: bool
 }
 
 impl Component for App {
@@ -36,8 +40,8 @@ impl Component for App {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let height = 30;
-        let width = 30;
+        let height = 10;
+        let width = 10;
         let num_mines =(height * width / 10) as usize;
 
         let mut game = Game::new(height, width, 5);
@@ -48,12 +52,19 @@ impl Component for App {
             game,
             height,
             width,
-            num_mines
+            num_mines,
+            show_settings: false
         }
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         let b = self.game.get_board().clone();
+        let mut style = String::new();
+        if !self.show_settings {
+            style = format!("height: 0px; transition: height 1s;");
+        } else {
+            style = format!("height: 98px; transition: height 1s");
+        }
         html!{
             <main class="container">
                 // Disable context menu
@@ -62,16 +73,60 @@ impl Component for App {
                 </script>
                 
                 <div class="upper-menu">
-                    <button class="button-reset" 
-                        onclick={self.link.callback(|_| Msg::Reset)}>{"Reset"}</button>
+                    <div class="menu-buttons">
+                        <button class="button-reset" 
+                            onclick={self.link.callback(|_| Msg::Reset)}>
+                            {"Reset"}
+                        </button>
+                        <div class="time">
+                            {"00:00"}
+                        </div>
+                        <button 
+                            id="open-settings" 
+                            class="open-settings"
+                            onclick={self.link.callback(|_| Msg::ToggleSettings)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M14.647 4.081a.724 .724 0 0 0 1.08 .448c2.439 -1.485 5.23 1.305 3.745 3.744a.724 .724 0 0 0 .447 1.08c2.775 .673 2.775 4.62 0 5.294a.724 .724 0 0 0 -.448 1.08c1.485 2.439 -1.305 5.23 -3.744 3.745a.724 .724 0 0 0 -1.08 .447c-.673 2.775 -4.62 2.775 -5.294 0a.724 .724 0 0 0 -1.08 -.448c-2.439 1.485 -5.23 -1.305 -3.745 -3.744a.724 .724 0 0 0 -.447 -1.08c-2.775 -.673 -2.775 -4.62 0 -5.294a.724 .724 0 0 0 .448 -1.08c-1.485 -2.439 1.305 -5.23 3.744 -3.745a.722 .722 0 0 0 1.08 -.447c.673 -2.775 4.62 -2.775 5.294 0zm-2.647 4.919a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="#ffffff"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div style={style} class="settings">
+                        <div class="custom-settings">
+                            <div class="setting">
+                                {"Height  "}
+                                <input class="text-input" id="height-input" type="text" value="10"/>
+                            </div>
+                            // <br/>
+                            <div class="setting">
+                                {"Width  "}
+                                <input class="text-input" id="width-input" type="text" value="10"/>
+                            </div>
+                            // <br/>
+                            <div class="setting">
+                                {"Mines  "}
+                                <input class="text-input" id="mines-input" type="text" value="10"/>
+                            </div>
+                        </div>
+                        <div class="preset-settings">
+                            <button class="preset-setting">{"Easy"}</button>
+                            <button class="preset-setting">{"Normal"}</button>
+                            <button class="preset-setting">{"Hard"}</button>
+                        </div>
+                    </div>
+
+                    // if self.show_settings {
+                    // }
+
                 </div>
 
                 <div class="game">
+                    <BoardComponent 
+                        onsignal={self.link.callback(|cell| Msg::Discover{cell})} 
+                        flagsignal={self.link.callback(|cell| Msg::Flag{cell})} 
+                        board={b}/>
                 </div>
-                <BoardComponent 
-                    onsignal={self.link.callback(|cell| Msg::Discover{cell})} 
-                    flagsignal={self.link.callback(|cell| Msg::Flag{cell})} 
-                    board={b}/>
             </main>
         }
     }
@@ -87,6 +142,9 @@ impl Component for App {
             Msg::Reset => {
                 self.game = Game::new(self.height, self.width, self.num_mines);
                 self.game.start_board();
+            }
+            Msg::ToggleSettings => {
+                self.show_settings = !self.show_settings;
             }
         }
         true

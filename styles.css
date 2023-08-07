@@ -9,6 +9,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
+  font-size: 25px;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -30,25 +31,49 @@ button {
   text-align: center;
   border-radius: 8px;
   border: 1px solid transparent;
+  margin: 2px;
 }
 
-.upper-menu{
+.upper-menu {
   display: flex;
-  justify-content: left;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: 700;
 }
 
-.game{
+.menu-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #2f2f2f;
+}
+
+.time {
   display: flex;
   justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 25px;
+}
+
+.game {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  background-color: #2f2f2f;
 }
 
 .button-reset {
   height: 50px;
-  width: 100px;
+  width: 104px;
   margin: 2px;
   font-size: 25px;
+  font-weight: 700;
   background-color: #0f0f0f98;
   color: #ffffff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   transition: background-color 0.5s;
   -webkit-transition: background-color 0.5s;
 }
@@ -59,6 +84,86 @@ button {
   -webkit-transition: background-color 0.5s;
 }
 
+.open-settings {
+  height: 50px;
+  width: 104px;
+  margin: 2px;
+  font-size: 25px;
+  font-weight: 700;
+  background-color: #0f0f0f98;
+  color: #ffffff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s;
+}
+
+.open-settings:hover {
+  background-color: #262626;
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  position: relative;
+  height: 0px;
+  color: #ffffff;
+  transition: height 1s;
+  -webkit-transition: height 1s;
+}
+
+.custom-settings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.preset-settings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.setting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+}
+
+.preset-setting {
+  /* height: 25px; */
+  margin: 2px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: #0f0f0f98;
+  color: #ffffff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  font-size: 25px;
+  font-weight: 700;
+  padding: 5px;
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s;
+}
+.preset-setting:hover {
+  background-color: #262626;
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s;
+}
+
+.text-input {
+  width: 50px;
+  font-size: 25px;
+  margin: 2px;
+  margin-left: 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  text-align: center;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
 .button-hidden {
   font-size: 25px;
   color: rgba(15, 15, 15, 0.0);
@@ -66,7 +171,6 @@ button {
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
   height: 50px;
   width: 50px;
-  margin: 2px;
   transition: background-color 0.5s;
   -webkit-transition: background-color 0.5s;
 }
@@ -78,7 +182,7 @@ button {
   background-color: #2f2f2f;
   height: 50px;
   width: 50px;
-  margin: 2px;
+
 }
 
 .button-hidden:hover {
