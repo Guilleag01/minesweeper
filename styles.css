@@ -4,10 +4,9 @@
   font-weight: 400;
   color: #0f0f0f98;
   background-color: #2f2f2f;
-  /* position: absolute; */
   height: 100%;
   width: auto;
-  display: inline-block;
+  display: flex;
   justify-content: center;
   text-align: center;
 
@@ -20,11 +19,11 @@
 
 .container {
   display: flex;
+  width: fit-content;
   justify-content: center;
   flex-direction: column;
   padding: 10vh;
   white-space: nowrap;
-  width: auto;
 }
 
 button {
@@ -70,7 +69,6 @@ button {
 .board {
   display: flexbox;
   justify-content: center;
-  /* width: calc((min(10vw - (2vw), 10vh - (2vh) - (110px / 10)) + (1px * 10)) * 10); */
   width: 100%;
 }
 

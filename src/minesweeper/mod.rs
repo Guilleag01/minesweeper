@@ -11,30 +11,55 @@ use rand::Rng;
 
 pub struct Game {
     board: Board,
+    first_interaction: bool,
 }
 
 impl Game {
     pub fn new(height: usize, width: usize, num_mines: usize) -> Self {
         Self {
             board: Board::new(height, width, num_mines),
+            first_interaction: false,
         }
     }
 
-    pub fn start_board(&mut self) {
+    pub fn start_board(&mut self, init_pos: (usize, usize)) {
         // TODO: make a better implementation
-        let mut added_mines = 0;
+        // let mut added_mines = 0;
+
+        // while added_mines < self.board.get_num_mines() {
+        //     let pos = (
+        //         rng.gen_range(0..self.board.get_height()),
+        //         rng.gen_range(0..self.board.get_width()),
+        //     );
+        //     if !self.board.is_mine(pos) {
+        //         self.board.set_mine(pos, true);
+        //         added_mines += 1;
+        //     }
+        // }
 
         let mut rng = rand::thread_rng();
 
-        while added_mines < self.board.get_num_mines() {
-            let pos = (
-                rng.gen_range(0..self.board.get_height()),
-                rng.gen_range(0..self.board.get_width()),
-            );
-            if !self.board.is_mine(pos) {
-                self.board.set_mine(pos, true);
-                added_mines += 1;
+        let mut possible_pos: Vec<(usize, usize)> = Vec::new();
+
+        for i in 0..self.board.get_height() {
+            for j in 0..self.board.get_width() {
+                possible_pos.push((i, j));
             }
+        }
+
+        if self.board.get_num_mines() < self.get_height() * self.get_width() {
+            possible_pos.remove(
+                possible_pos
+                    .iter()
+                    .position(|value| *value == init_pos)
+                    .unwrap(),
+            );
+        }
+
+        for _ in 0..self.board.get_num_mines() {
+            let pos = rng.gen_range(0..possible_pos.len());
+            self.board.set_mine(possible_pos[pos], true);
+            possible_pos.remove(pos);
         }
 
         for i in 0..self.board.get_height() {
@@ -118,6 +143,14 @@ impl Game {
     }
 
     pub fn set_flag(&mut self, pos: (usize, usize), flag: bool) {
-        self.board.set_flag(pos, flag);
+        self.board.set_flag(pos, flag)
+    }
+
+    pub fn get_fist_interaction(&self) -> bool {
+        self.first_interaction
+    }
+
+    pub fn set_fist_interaction(&mut self, first_interaction: bool) {
+        self.first_interaction = first_interaction
     }
 }

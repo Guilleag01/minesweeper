@@ -49,8 +49,8 @@ impl Component for App {
         let width = 10;
         let num_mines = height * width / 10;
 
-        let mut game = Game::new(height, width, 5);
-        game.start_board();
+        let game = Game::new(height, width, 5);
+        // game.start_board();
 
         Self {
             link: ctx.link().clone(),
@@ -157,6 +157,10 @@ impl Component for App {
 
         match msg {
             Msg::Discover { cell } => {
+                if !self.game.get_fist_interaction() {
+                    self.game.start_board(cell.get_pos());
+                    self.game.set_fist_interaction(true);
+                }
                 self.game.show(cell.get_pos());
             }
             Msg::Flag { cell } => {
@@ -167,7 +171,7 @@ impl Component for App {
             }
             Msg::Reset => {
                 self.game = Game::new(self.height, self.width, self.num_mines);
-                self.game.start_board();
+                // self.game.start_board();
             }
             Msg::ToggleSettings => {
                 self.show_settings = !self.show_settings;
@@ -188,7 +192,7 @@ impl Component for App {
                     let mines = get_mines();
                     self.num_mines = mines.min(self.height * self.width);
                     self.game = Game::new(self.height, self.width, self.num_mines);
-                    self.game.start_board();
+                    // self.game.start_board();
                 }
             }
             Msg::UpdateWidth => {
@@ -207,7 +211,7 @@ impl Component for App {
                     let mines = get_mines();
                     self.num_mines = mines.min(self.height * self.width);
                     self.game = Game::new(self.height, self.width, self.num_mines);
-                    self.game.start_board();
+                    // self.game.start_board();
                 }
             }
             Msg::UpdateMines => {
@@ -215,7 +219,7 @@ impl Component for App {
                 if mines <= self.height * self.width {
                     self.num_mines = mines;
                     self.game = Game::new(self.height, self.width, self.num_mines);
-                    self.game.start_board();
+                    // self.game.start_board();
                 }
             }
         }
