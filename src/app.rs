@@ -3,7 +3,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::HtmlInputElement;
 
 // use wasm_bindgen_futures::spawn_local;
-use yew::{prelude::*, html::Scope};
+use yew::{html::Scope, prelude::*};
 
 // use log::info;
 use wasm_bindgen::JsValue;
@@ -21,9 +21,9 @@ extern "C" {
 }
 
 pub enum Msg {
-    Discover{ cell: Cell },
-    Flag{ cell: Cell },
-    Reset, 
+    Discover { cell: Cell },
+    Flag { cell: Cell },
+    Reset,
     ToggleSettings,
     UpdateHeight,
     UpdateWidth,
@@ -36,7 +36,7 @@ pub struct App {
     height: usize,
     width: usize,
     num_mines: usize,
-    show_settings: bool
+    show_settings: bool,
 }
 
 impl Component for App {
@@ -52,38 +52,42 @@ impl Component for App {
         let mut game = Game::new(height, width, 5);
         game.start_board();
 
-        Self { 
+        Self {
             link: ctx.link().clone(),
             game,
             height,
             width,
             num_mines,
-            show_settings: false
+            show_settings: false,
         }
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         let b = self.game.get_board().clone();
-        let style = format!("height: {}px; transition: height 1s;", if !self.show_settings {0} else {98}).to_string();
+        let style = format!(
+            "height: {}px; transition: height 1s;",
+            if !self.show_settings { 0 } else { 98 }
+        )
+        .to_string();
 
-        html!{
+        html! {
             <main class="container">
                 // Disable context menu
                 <script>
                     {"document.addEventListener('contextmenu', event => event.preventDefault());"}
                 </script>
-                
+
                 <div class="upper-menu">
                     <div class="menu-buttons">
-                        <button class="button-reset" 
+                        <button class="button-reset"
                             onclick={self.link.callback(|_| Msg::Reset)}>
                             {"Reset"}
                         </button>
                         <div class="time">
                             {"00:00"}
                         </div>
-                        <button 
-                            id="open-settings" 
+                        <button
+                            id="open-settings"
                             class="open-settings"
                             onclick={self.link.callback(|_| Msg::ToggleSettings)}>
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -120,9 +124,9 @@ impl Component for App {
                 </div>
 
                 <div class="game">
-                    <BoardComponent 
-                        onsignal={self.link.callback(|cell| Msg::Discover{cell})} 
-                        flagsignal={self.link.callback(|cell| Msg::Flag{cell})} 
+                    <BoardComponent
+                        onsignal={self.link.callback(|cell| Msg::Discover{cell})}
+                        flagsignal={self.link.callback(|cell| Msg::Flag{cell})}
                         board={b}/>
                 </div>
             </main>
@@ -133,9 +137,17 @@ impl Component for App {
         let d = web_sys::window().unwrap().document().unwrap();
 
         let get_mines = || {
-            let text = d.get_element_by_id("mines-input").unwrap().dyn_into::<HtmlInputElement>().unwrap().value();
+            let text = d
+                .get_element_by_id("mines-input")
+                .unwrap()
+                .dyn_into::<HtmlInputElement>()
+                .unwrap()
+                .value();
 
-            let re = Regex::new("^((0+)|((0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)))$").unwrap();
+            let re = Regex::new(
+                "^((0+)|((0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)))$",
+            )
+            .unwrap();
             let mut value: usize = self.num_mines;
             if re.is_match(&text) {
                 value = text.parse().unwrap();
@@ -144,23 +156,33 @@ impl Component for App {
         };
 
         match msg {
-            Msg::Discover {cell} => {
+            Msg::Discover { cell } => {
                 self.game.show(cell.get_pos());
-            },
-            Msg::Flag {cell} => {
-                self.game.set_flag(cell.get_pos(), !self.game.get_cell(cell.get_pos()).is_flagged());
-            },
+            }
+            Msg::Flag { cell } => {
+                self.game.set_flag(
+                    cell.get_pos(),
+                    !self.game.get_cell(cell.get_pos()).is_flagged(),
+                );
+            }
             Msg::Reset => {
                 self.game = Game::new(self.height, self.width, self.num_mines);
                 self.game.start_board();
-            },
+            }
             Msg::ToggleSettings => {
                 self.show_settings = !self.show_settings;
-            },
+            }
             Msg::UpdateHeight => {
-                let text = d.get_element_by_id("height-input").unwrap().dyn_into::<HtmlInputElement>().unwrap().value();
+                let text = d
+                    .get_element_by_id("height-input")
+                    .unwrap()
+                    .dyn_into::<HtmlInputElement>()
+                    .unwrap()
+                    .value();
 
-                let re = Regex::new("^(0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)$").unwrap();
+                let re =
+                    Regex::new("^(0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)$")
+                        .unwrap();
                 if re.is_match(&text) {
                     self.height = text.parse().unwrap();
                     let mines = get_mines();
@@ -168,11 +190,18 @@ impl Component for App {
                     self.game = Game::new(self.height, self.width, self.num_mines);
                     self.game.start_board();
                 }
-            },
+            }
             Msg::UpdateWidth => {
-                let text = d.get_element_by_id("width-input").unwrap().dyn_into::<HtmlInputElement>().unwrap().value();
+                let text = d
+                    .get_element_by_id("width-input")
+                    .unwrap()
+                    .dyn_into::<HtmlInputElement>()
+                    .unwrap()
+                    .value();
 
-                let re = Regex::new("^(0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)$").unwrap();
+                let re =
+                    Regex::new("^(0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)$")
+                        .unwrap();
                 if re.is_match(&text) {
                     self.width = text.parse().unwrap();
                     let mines = get_mines();
@@ -180,7 +209,7 @@ impl Component for App {
                     self.game = Game::new(self.height, self.width, self.num_mines);
                     self.game.start_board();
                 }
-            },
+            }
             Msg::UpdateMines => {
                 let mines = get_mines();
                 if mines <= self.height * self.width {

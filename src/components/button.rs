@@ -1,7 +1,7 @@
 // use std::fmt::format;
 
-use yew::{prelude::*, html::Scope};
 use crate::minesweeper::cell::Cell;
+use yew::{html::Scope, prelude::*};
 
 // use log::info;
 // use wasm_bindgen::JsValue;
@@ -17,7 +17,7 @@ pub struct Button {
 
 pub enum Msg {
     Clicked,
-    RightClicked
+    RightClicked,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -26,7 +26,7 @@ pub struct Props {
     pub width: usize,
     pub height: usize,
     pub onsignal: Callback<Cell>,
-    pub flagsignal: Callback<Cell>
+    pub flagsignal: Callback<Cell>,
 }
 
 impl Component for Button {
@@ -40,22 +40,38 @@ impl Component for Button {
             onsignal: ctx.props().onsignal.clone(),
             flagsignal: ctx.props().flagsignal.clone(),
             width: ctx.props().width.to_owned(),
-            height: ctx.props().height.to_owned()
-
+            height: ctx.props().height.to_owned(),
         }
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
-
-        let style_width = format!("width: calc(max(min({}vw - ({}vw), {}vh - ({}vh) - ({}px)), 25px)); ", (100 / self.width) as f32, (40 / self.width) as f32, (100 / self.height) as f32, (20 / self.height) as f32, (110 / self.height) as f32);
-        let style_font = format!("font-size: calc(0.5 * max(min({}vw - ({}vw), {}vh - ({}vh) - ({}px)), 20px)); ", (100 / self.width) as f32, (40 / self.width) as f32, (100 / self.height) as f32, (20 / self.height) as f32, (110 / self.height) as f32);
+        let style_width = format!(
+            "width: calc(max(min({}vw - ({}vw), {}vh - ({}vh) - ({}px)), 25px)); ",
+            (100 / self.width) as f32,
+            (40 / self.width) as f32,
+            (100 / self.height) as f32,
+            (20 / self.height) as f32,
+            (110 / self.height) as f32
+        );
+        let style_font = format!(
+            "font-size: calc(0.5 * max(min({}vw - ({}vw), {}vh - ({}vh) - ({}px)), 20px)); ",
+            (100 / self.width) as f32,
+            (40 / self.width) as f32,
+            (100 / self.height) as f32,
+            (20 / self.height) as f32,
+            (110 / self.height) as f32
+        );
         // 100% = 20hv + (2 * n + 1) + n * x
-        let mut style = if !self.cell.is_hidden() {format!("background-color: #2f2f2f; color: #ffffff; transition: background-color 0.5s, color 0.5s; transition-delay: {}s, {}s; ", self.cell.get_delay(), self.cell.get_delay())} else {"".to_string()};
+        let mut style = if !self.cell.is_hidden() {
+            format!("background-color: #2f2f2f; color: #ffffff; transition: background-color 0.5s, color 0.5s; transition-delay: {}s, {}s; ", self.cell.get_delay(), self.cell.get_delay())
+        } else {
+            "".to_string()
+        };
         style.push_str(&style_width);
         style.push_str(&style_font);
 
-        html!{
-            <button 
+        html! {
+            <button
                 class={if self.cell.is_hidden() {"button-hidden"} else {"button-shown"}}
                 onclick={self.link.callback(|_| Msg::Clicked)}
                 oncontextmenu={self.link.callback(|_| {Msg::RightClicked})}
@@ -87,7 +103,7 @@ impl Component for Button {
             }
             Msg::RightClicked => {
                 self.flagsignal.emit(self.cell);
-            },
+            }
         }
         true
     }

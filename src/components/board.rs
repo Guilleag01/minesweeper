@@ -1,4 +1,4 @@
-use yew::{prelude::*, html::Scope};
+use yew::{html::Scope, prelude::*};
 
 use crate::minesweeper::{board::Board, cell::Cell};
 
@@ -11,19 +11,19 @@ pub struct BoardComponent {
     link: Scope<Self>,
     board: Board,
     onsignal: Callback<Cell>,
-    flagsignal: Callback<Cell>
+    flagsignal: Callback<Cell>,
 }
 
 pub enum Msg {
-    Discover{ cell: Cell },
-    Flag{ cell: Cell }
+    Discover { cell: Cell },
+    Flag { cell: Cell },
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
     pub board: Board,
     pub onsignal: Callback<Cell>,
-    pub flagsignal: Callback<Cell>
+    pub flagsignal: Callback<Cell>,
 }
 
 impl Component for BoardComponent {
@@ -36,12 +36,11 @@ impl Component for BoardComponent {
             link: ctx.link().clone(),
             board: ctx.props().board.clone(),
             onsignal: ctx.props().onsignal.clone(),
-            flagsignal: ctx.props().flagsignal.clone()
+            flagsignal: ctx.props().flagsignal.clone(),
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-
         let b = ctx.props().board.get_board().clone();
 
         let height = self.board.get_height();
@@ -54,13 +53,13 @@ impl Component for BoardComponent {
                         <>
                         {row.into_iter().map(|c| {
                             html! {
-                                <Button 
-                                    onsignal={self.link.callback(move |_| Msg::Discover{cell: c})} 
-                                    flagsignal={self.link.callback(move |_| Msg::Flag{cell: c})} 
+                                <Button
+                                    onsignal={self.link.callback(move |_| Msg::Discover{cell: c})}
+                                    flagsignal={self.link.callback(move |_| Msg::Flag{cell: c})}
                                     cell={c}
                                     height={height}
                                     width={width}/>
-                            } 
+                            }
                         }).collect::<Html>()}
                         <br/>
                         </>
@@ -72,10 +71,10 @@ impl Component for BoardComponent {
 
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::Discover {cell} => {
+            Msg::Discover { cell } => {
                 self.onsignal.emit(cell);
             }
-            Msg::Flag {cell} => {
+            Msg::Flag { cell } => {
                 self.flagsignal.emit(cell);
             }
         }
@@ -88,5 +87,4 @@ impl Component for BoardComponent {
         self.flagsignal = ctx.props().flagsignal.clone();
         true
     }
-
 }

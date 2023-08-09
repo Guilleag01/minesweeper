@@ -1,5 +1,5 @@
-pub mod cell;
 pub mod board;
+pub mod cell;
 
 use board::Board;
 use cell::Cell;
@@ -20,14 +20,17 @@ impl Game {
         }
     }
 
-    pub fn start_board(&mut self){
+    pub fn start_board(&mut self) {
         // TODO: make a better implementation
         let mut added_mines = 0;
 
         let mut rng = rand::thread_rng();
 
         while added_mines < self.board.get_num_mines() {
-            let pos = (rng.gen_range(0..self.board.get_height()), rng.gen_range(0..self.board.get_width()));
+            let pos = (
+                rng.gen_range(0..self.board.get_height()),
+                rng.gen_range(0..self.board.get_width()),
+            );
             if !self.board.is_mine(pos) {
                 self.board.set_mine(pos, true);
                 added_mines += 1;
@@ -36,7 +39,8 @@ impl Game {
 
         for i in 0..self.board.get_height() {
             for j in 0..self.board.get_width() {
-                self.board.set_value((i, j), self.board.calculate_value((i, j)))             
+                self.board
+                    .set_value((i, j), self.board.calculate_value((i, j)))
             }
         }
     }
@@ -49,29 +53,31 @@ impl Game {
 
         // let mut cells_to_show = Vec::<(usize, usize)>::new();
         let mut cells_to_show = Vec::<(usize, usize)>::from([init_pos]);
-        
+
         // cells_to_show.push(init_pos);
 
         self.board.get_cell(init_pos).set_delay(0.0);
 
         let mut added_cells = 1;
-        
+
         while added_cells > 0 {
             let new_cells = cells_to_show.len() - added_cells;
             added_cells = 0;
-            
+
             cells_to_show = cells_to_show[new_cells..cells_to_show.len()].to_vec();
 
             for k in 0..cells_to_show.len() {
                 let pos = cells_to_show[k];
                 for i in -1..=1 {
                     for j in -1..=1 {
-                        let new_pos = ((pos.0 as isize + i) as usize, (pos.1 as isize + j) as usize);
-                        if pos.0 as isize + i < 0 ||
-                            pos.0 as isize + i >= self.get_height() as isize ||
-                            pos.1 as isize + j < 0 ||
-                            pos.1 as isize + j >= self.get_width() as isize ||
-                            !self.board.get_cell(new_pos).is_hidden() {
+                        let new_pos =
+                            ((pos.0 as isize + i) as usize, (pos.1 as isize + j) as usize);
+                        if pos.0 as isize + i < 0
+                            || pos.0 as isize + i >= self.get_height() as isize
+                            || pos.1 as isize + j < 0
+                            || pos.1 as isize + j >= self.get_width() as isize
+                            || !self.board.get_cell(new_pos).is_hidden()
+                        {
                             continue;
                         }
                         if self.board.get_cell(new_pos).get_value() == 0 {
@@ -82,12 +88,12 @@ impl Game {
                         // let delay = f32::sqrt(((init_pos.0 as isize - new_pos.0 as isize).pow(2) + (init_pos.1 as isize - new_pos.1 as isize).pow(2)) as f32) * 0.05;
 
                         let delay = self.board.get_cell(pos).get_delay() + 0.05;
-                        
+
                         self.board.set_delay(new_pos, delay);
                         self.board.show_cell(new_pos);
                     }
                 }
-            }   
+            }
         }
     }
 
@@ -97,7 +103,7 @@ impl Game {
 
     pub fn get_width(&self) -> usize {
         self.board.get_width()
-    }   
+    }
 
     pub fn get_board(&self) -> &Board {
         &self.board

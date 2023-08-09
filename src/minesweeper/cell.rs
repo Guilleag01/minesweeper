@@ -5,7 +5,7 @@ pub struct Cell {
     value: usize,
     hidden: bool,
     flagged: bool,
-    delay: f32
+    delay: f32,
 }
 
 impl Cell {
@@ -16,7 +16,7 @@ impl Cell {
             value: 0,
             hidden: true,
             flagged: false,
-            delay: 0.0
+            delay: 0.0,
         }
     }
 
@@ -37,7 +37,7 @@ impl Cell {
     }
 
     pub fn set_value(&mut self, new_value: usize) {
-       self.value = new_value;
+        self.value = new_value;
     }
 
     pub fn show(&mut self) {
@@ -68,7 +68,6 @@ impl Cell {
     pub fn set_delay(&mut self, delay: f32) {
         self.delay = delay;
     }
-
 }
 
 impl ToString for Cell {

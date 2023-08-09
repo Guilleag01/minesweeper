@@ -1,4 +1,3 @@
-
 use super::cell::Cell;
 
 #[derive(Clone, PartialEq)]
@@ -6,7 +5,7 @@ pub struct Board {
     board: Vec<Vec<Cell>>,
     height: usize,
     width: usize,
-    num_mines: usize    
+    num_mines: usize,
 }
 
 impl Board {
@@ -23,7 +22,7 @@ impl Board {
             board: t,
             height,
             width,
-            num_mines
+            num_mines,
         }
     }
 
@@ -32,7 +31,11 @@ impl Board {
         for i in -1..=1 {
             for j in -1..=1 {
                 let new_pos: (isize, isize) = ((pos.0 as isize) + i, (pos.1 as isize) + j);
-                if new_pos.0 >= 0 && new_pos.0 < (self.height as isize) && new_pos.1 >= 0 && new_pos.1 < (self.width as isize) {
+                if new_pos.0 >= 0
+                    && new_pos.0 < (self.height as isize)
+                    && new_pos.1 >= 0
+                    && new_pos.1 < (self.width as isize)
+                {
                     value += self.is_mine((new_pos.0 as usize, new_pos.1 as usize)) as usize;
                 }
             }
