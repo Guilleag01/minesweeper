@@ -33,6 +33,7 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   margin: 2px;
+  outline: none;
 }
 
 .upper-menu {
@@ -215,7 +216,10 @@ button {
   height: 70%;
 }
 
-input,
-button {
-  outline: none;
+.gamestate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 25px;
 }

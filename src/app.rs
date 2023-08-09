@@ -129,6 +129,14 @@ impl Component for App {
                         flagsignal={self.link.callback(|cell| Msg::Flag{cell})}
                         board={b}/>
                 </div>
+
+                <div class="gamestate">
+                    if self.game.get_gamestate() == 1 {
+                        <h1>{"You have lost"}</h1>
+                    } else if self.game.get_gamestate() == 2 {
+                        <h1>{"You win!"}</h1>
+                    }
+                </div>
             </main>
         }
     }
@@ -157,11 +165,14 @@ impl Component for App {
 
         match msg {
             Msg::Discover { cell } => {
-                if !self.game.get_fist_interaction() {
-                    self.game.start_board(cell.get_pos());
-                    self.game.set_fist_interaction(true);
+                if self.game.get_gamestate() == 0 {
+                    if !self.game.get_fist_interaction() {
+                        self.game.start_board(cell.get_pos());
+                        self.game.set_fist_interaction(true);
+                    }
+                    self.game.show(cell.get_pos());
+                    self.game.update_state();
                 }
-                self.game.show(cell.get_pos());
             }
             Msg::Flag { cell } => {
                 self.game.set_flag(

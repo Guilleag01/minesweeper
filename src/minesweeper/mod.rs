@@ -12,6 +12,7 @@ use rand::Rng;
 pub struct Game {
     board: Board,
     first_interaction: bool,
+    gamestate: usize,
 }
 
 impl Game {
@@ -19,24 +20,11 @@ impl Game {
         Self {
             board: Board::new(height, width, num_mines),
             first_interaction: false,
+            gamestate: 0,
         }
     }
 
     pub fn start_board(&mut self, init_pos: (usize, usize)) {
-        // TODO: make a better implementation
-        // let mut added_mines = 0;
-
-        // while added_mines < self.board.get_num_mines() {
-        //     let pos = (
-        //         rng.gen_range(0..self.board.get_height()),
-        //         rng.gen_range(0..self.board.get_width()),
-        //     );
-        //     if !self.board.is_mine(pos) {
-        //         self.board.set_mine(pos, true);
-        //         added_mines += 1;
-        //     }
-        // }
-
         let mut rng = rand::thread_rng();
 
         let mut possible_pos: Vec<(usize, usize)> = Vec::new();
@@ -122,6 +110,28 @@ impl Game {
         }
     }
 
+    pub fn update_state(&mut self) -> usize {
+        let mut unfinished = false;
+        for i in 0..self.board.get_height() {
+            for j in 0..self.board.get_width() {
+                let cell = self.get_cell((i, j));
+                if !cell.is_mine() && cell.is_hidden() {
+                    unfinished = true;
+                }
+                if cell.is_mine() && !cell.is_hidden() {
+                    self.gamestate = 1;
+                    return 1; // player has lost
+                }
+            }
+        }
+        if unfinished {
+            self.gamestate = 0;
+            return 0;
+        }
+        self.gamestate = 2;
+        2 // player has won
+    }
+
     pub fn get_height(&self) -> usize {
         self.board.get_height()
     }
@@ -152,5 +162,9 @@ impl Game {
 
     pub fn set_fist_interaction(&mut self, first_interaction: bool) {
         self.first_interaction = first_interaction
+    }
+
+    pub fn get_gamestate(&self) -> usize {
+        self.gamestate
     }
 }
