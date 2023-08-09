@@ -19,12 +19,12 @@ impl Board {
             }
         }
 
-        return Self {
+        Self {
             board: t,
             height,
             width,
             num_mines
-        };
+        }
     }
 
     pub fn calculate_value(&self, pos: (usize, usize)) -> usize {
@@ -37,11 +37,11 @@ impl Board {
                 }
             }
         }
-        return value;
+        value
     }
 
     pub fn get_board(&self) -> &Vec<Vec<Cell>> {
-        return &self.board;
+        &self.board
     }
 
     pub fn set_mine(&mut self, pos: (usize, usize), value: bool) {
@@ -49,31 +49,31 @@ impl Board {
     }
 
     pub fn get_height(&self) -> usize {
-        return self.height;
+        self.height
     }
 
     pub fn get_width(&self) -> usize {
-        return self.width;
+        self.width
     }
 
     pub fn get_num_mines(&self) -> usize {
-        return self.num_mines;
+        self.num_mines
     }
 
     pub fn is_mine(&self, pos: (usize, usize)) -> bool {
-        return self.board[pos.0][pos.1].is_mine();
+        self.board[pos.0][pos.1].is_mine()
     }
 
     pub fn get_value(&self, pos: (usize, usize)) -> usize {
-        return self.board[pos.0][pos.1].get_value();
+        self.board[pos.0][pos.1].get_value()
     }
 
     pub fn get_cell(&self, pos: (usize, usize)) -> Cell {
-        return self.board[pos.0][pos.1];
+        self.board[pos.0][pos.1]
     }
 
     pub fn set_value(&mut self, pos: (usize, usize), new_value: usize) {
-        return self.board[pos.0][pos.1].set_value(new_value)
+        self.board[pos.0][pos.1].set_value(new_value)
     }
 
     pub fn show_cell(&mut self, pos: (usize, usize)) {
@@ -97,18 +97,18 @@ impl ToString for Board {
             // result.push_str(" ");
             result.push_str(i.to_string().as_str());
         }
-        result.push_str("\n");
+        result.push('\n');
 
         for i in 0..self.height {
             result.push_str(i.to_string().as_str());
-            result.push_str(" ");
+            result.push(' ');
 
             for j in 0..self.width {
                 result.push_str(self.get_cell((i, j)).to_string().as_str());
             }
-            result.push_str("\n");
+            result.push(' ');
         }
 
-        return result;
+        result
     }
 }

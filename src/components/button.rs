@@ -1,4 +1,4 @@
-use std::fmt::format;
+// use std::fmt::format;
 
 use yew::{prelude::*, html::Scope};
 use crate::minesweeper::cell::Cell;
@@ -36,11 +36,11 @@ impl Component for Button {
     fn create(ctx: &Context<Self>) -> Self {
         Self {
             link: ctx.link().clone(),
-            cell: ctx.props().cell.clone(),
+            cell: ctx.props().cell.to_owned(),
             onsignal: ctx.props().onsignal.clone(),
             flagsignal: ctx.props().flagsignal.clone(),
-            width: ctx.props().width.clone(),
-            height: ctx.props().height.clone()
+            width: ctx.props().width.to_owned(),
+            height: ctx.props().height.to_owned()
 
         }
     }
@@ -93,11 +93,11 @@ impl Component for Button {
     }
 
     fn changed(&mut self, ctx: &Context<Self>, _old_props: &Self::Properties) -> bool {
-        self.cell = ctx.props().cell.clone();
+        self.cell = ctx.props().cell.to_owned();
         self.onsignal = ctx.props().onsignal.clone();
         self.flagsignal = ctx.props().flagsignal.clone();
-        self.width = ctx.props().width.clone();
-        self.height = ctx.props().height.clone();
+        self.width = ctx.props().width.to_owned();
+        self.height = ctx.props().height.to_owned();
         true
     }
 }

@@ -10,22 +10,22 @@ pub struct Cell {
 
 impl Cell {
     pub fn new(pos: (usize, usize)) -> Self {
-        return Self {
+        Self {
             pos,
             mine: false,
             value: 0,
             hidden: true,
             flagged: false,
             delay: 0.0
-        };
+        }
     }
 
     pub fn get_pos(&self) -> (usize, usize) {
-        return self.pos;
+        self.pos
     }
 
     pub fn is_mine(&self) -> bool {
-        return self.mine;
+        self.mine
     }
 
     pub fn set_mine(&mut self, new_mine: bool) {
@@ -33,7 +33,7 @@ impl Cell {
     }
 
     pub fn get_value(&self) -> usize {
-        return self.value;
+        self.value
     }
 
     pub fn set_value(&mut self, new_value: usize) {
@@ -46,11 +46,11 @@ impl Cell {
     }
 
     pub fn is_hidden(&self) -> bool {
-        return self.hidden;
+        self.hidden
     }
 
     pub fn is_flagged(&self) -> bool {
-        return self.flagged;
+        self.flagged
     }
 
     pub fn set_flag(&mut self, new_flag: bool) {
@@ -83,6 +83,6 @@ impl ToString for Cell {
             return " ".to_string();
         }
 
-        return self.value.to_string();
+        self.value.to_string()
     }
 }

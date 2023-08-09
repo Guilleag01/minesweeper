@@ -47,9 +47,10 @@ impl Game {
             return;
         }
 
-        let mut cells_to_show = Vec::<(usize, usize)>::new();
+        // let mut cells_to_show = Vec::<(usize, usize)>::new();
+        let mut cells_to_show = Vec::<(usize, usize)>::from([init_pos]);
         
-        cells_to_show.push(init_pos);
+        // cells_to_show.push(init_pos);
 
         self.board.get_cell(init_pos).set_delay(0.0);
 

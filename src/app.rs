@@ -1,5 +1,3 @@
-#[warn(unused_assignments)]
-
 // use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 use web_sys::HtmlInputElement;
@@ -49,7 +47,7 @@ impl Component for App {
     fn create(ctx: &Context<Self>) -> Self {
         let height = 10;
         let width = 10;
-        let num_mines =(height * width / 10) as usize;
+        let num_mines = height * width / 10;
 
         let mut game = Game::new(height, width, 5);
         game.start_board();
@@ -142,7 +140,7 @@ impl Component for App {
             if re.is_match(&text) {
                 value = text.parse().unwrap();
             }
-            return value;
+            value
         };
 
         match msg {
