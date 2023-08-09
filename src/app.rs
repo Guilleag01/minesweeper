@@ -2,11 +2,15 @@
 
 // use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
+use web_sys::HtmlInputElement;
+
 // use wasm_bindgen_futures::spawn_local;
 use yew::{prelude::*, html::Scope};
 
 // use log::info;
-// use wasm_bindgen::JsValue;
+use wasm_bindgen::JsValue;
+
+use regex::Regex;
 
 use minesweeper_ui::components::board::BoardComponent;
 
@@ -22,7 +26,10 @@ pub enum Msg {
     Discover{ cell: Cell },
     Flag{ cell: Cell },
     Reset, 
-    ToggleSettings
+    ToggleSettings,
+    UpdateHeight,
+    UpdateWidth,
+    UpdateMines,
 }
 
 pub struct App {
@@ -59,12 +66,8 @@ impl Component for App {
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
         let b = self.game.get_board().clone();
-        let mut style = String::new();
-        if !self.show_settings {
-            style = format!("height: 0px; transition: height 1s;");
-        } else {
-            style = format!("height: 98px; transition: height 1s");
-        }
+        let style = format!("height: {}px; transition: height 1s;", if !self.show_settings {0} else {98}).to_string();
+
         html!{
             <main class="container">
                 // Disable context menu
@@ -96,17 +99,18 @@ impl Component for App {
                         <div class="custom-settings">
                             <div class="setting">
                                 {"Height  "}
-                                <input class="text-input" id="height-input" type="text" value="10"/>
+                                <input class="text-input" id="height-input" type="text"
+                                oninput={self.link.callback(|_| Msg::UpdateHeight)}/>
                             </div>
-                            // <br/>
                             <div class="setting">
                                 {"Width  "}
-                                <input class="text-input" id="width-input" type="text" value="10"/>
+                                <input class="text-input" id="width-input" type="text"
+                                oninput={self.link.callback(|_| Msg::UpdateWidth)}/>
                             </div>
-                            // <br/>
                             <div class="setting">
                                 {"Mines  "}
-                                <input class="text-input" id="mines-input" type="text" value="10"/>
+                                <input class="text-input" id="mines-input" type="text"
+                                oninput={self.link.callback(|_| Msg::UpdateMines)}/>
                             </div>
                         </div>
                         <div class="preset-settings">
@@ -115,10 +119,6 @@ impl Component for App {
                             <button class="preset-setting">{"Hard"}</button>
                         </div>
                     </div>
-
-                    // if self.show_settings {
-                    // }
-
                 </div>
 
                 <div class="game">
@@ -132,19 +132,64 @@ impl Component for App {
     }
 
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+        let d = web_sys::window().unwrap().document().unwrap();
+
+        let get_mines = || {
+            let text = d.get_element_by_id("mines-input").unwrap().dyn_into::<HtmlInputElement>().unwrap().value();
+
+            let re = Regex::new("^((0+)|((0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)))$").unwrap();
+            let mut value: usize = self.num_mines;
+            if re.is_match(&text) {
+                value = text.parse().unwrap();
+            }
+            return value;
+        };
+
         match msg {
             Msg::Discover {cell} => {
                 self.game.show(cell.get_pos());
             },
             Msg::Flag {cell} => {
                 self.game.set_flag(cell.get_pos(), !self.game.get_cell(cell.get_pos()).is_flagged());
-            }
+            },
             Msg::Reset => {
                 self.game = Game::new(self.height, self.width, self.num_mines);
                 self.game.start_board();
-            }
+            },
             Msg::ToggleSettings => {
                 self.show_settings = !self.show_settings;
+            },
+            Msg::UpdateHeight => {
+                let text = d.get_element_by_id("height-input").unwrap().dyn_into::<HtmlInputElement>().unwrap().value();
+
+                let re = Regex::new("^(0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)$").unwrap();
+                if re.is_match(&text) {
+                    self.height = text.parse().unwrap();
+                    let mines = get_mines();
+                    self.num_mines = mines.min(self.height * self.width);
+                    self.game = Game::new(self.height, self.width, self.num_mines);
+                    self.game.start_board();
+                }
+            },
+            Msg::UpdateWidth => {
+                let text = d.get_element_by_id("width-input").unwrap().dyn_into::<HtmlInputElement>().unwrap().value();
+
+                let re = Regex::new("^(0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)$").unwrap();
+                if re.is_match(&text) {
+                    self.width = text.parse().unwrap();
+                    let mines = get_mines();
+                    self.num_mines = mines.min(self.height * self.width);
+                    self.game = Game::new(self.height, self.width, self.num_mines);
+                    self.game.start_board();
+                }
+            },
+            Msg::UpdateMines => {
+                let mines = get_mines();
+                if mines <= self.height * self.width {
+                    self.num_mines = mines;
+                    self.game = Game::new(self.height, self.width, self.num_mines);
+                    self.game.start_board();
+                }
             }
         }
         true

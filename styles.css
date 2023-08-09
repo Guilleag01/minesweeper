@@ -1,15 +1,15 @@
 :root {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 16px;
   line-height: 24px;
   font-weight: 400;
   color: #0f0f0f98;
   background-color: #2f2f2f;
-
+  /* position: absolute; */
   height: 100%;
-  display: flex;
+  width: auto;
+  display: inline-block;
   justify-content: center;
-  font-size: 25px;
+  text-align: center;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,10 +19,12 @@
 }
 
 .container {
-  display: block;
+  display: flex;
   justify-content: center;
-  margin: 0;
+  flex-direction: column;
   padding: 10vh;
+  white-space: nowrap;
+  width: auto;
 }
 
 button {
@@ -58,11 +60,18 @@ button {
 }
 
 .game {
-  position: relative;
   z-index: 1;
   display: flex;
   justify-content: center;
   background-color: #2f2f2f;
+  width: 100%;
+}
+
+.board {
+  display: flexbox;
+  justify-content: center;
+  /* width: calc((min(10vw - (2vw), 10vh - (2vh) - (110px / 10)) + (1px * 10)) * 10); */
+  width: 100%;
 }
 
 .button-reset {
@@ -117,7 +126,7 @@ button {
 .custom-settings {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .preset-settings {
@@ -127,6 +136,7 @@ button {
 }
 
 .setting {
+  width: 176px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -135,6 +145,7 @@ button {
 
 .preset-setting {
   /* height: 25px; */
+  width: 176px;
   margin: 2px;
   border-radius: 8px;
   border: 1px solid transparent;
@@ -165,24 +176,21 @@ button {
 }
 
 .button-hidden {
-  font-size: 25px;
+  aspect-ratio: 1 / 1;
+  /* font-size: 25px; */
   color: rgba(15, 15, 15, 0.0);
   background-color: #0f0f0f98;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  height: 50px;
-  width: 50px;
   transition: background-color 0.5s;
   -webkit-transition: background-color 0.5s;
 }
 
 .button-shown {
-  font-size: 25px;
+  aspect-ratio: 1 / 1;
+  font-size: calc(5 * min(1vw, 1vh));
   font-weight: 700;
-  color: #0f0f0f98;
+  color: #0f0f0f98; 
   background-color: #2f2f2f;
-  height: 50px;
-  width: 50px;
-
 }
 
 .button-hidden:hover {
@@ -202,6 +210,11 @@ button {
   background-color: #2f2f2f;
   transition: background-color 0.5s;
   -webkit-transition: background-color 0.5s;
+}
+
+.button-icon {
+  width: 70%;
+  height: 70%;
 }
 
 input,

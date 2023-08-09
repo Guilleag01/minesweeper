@@ -113,5 +113,4 @@ impl Game {
     pub fn set_flag(&mut self, pos: (usize, usize), flag: bool) {
         self.board.set_flag(pos, flag);
     }
-
 }

@@ -42,7 +42,10 @@ impl Component for BoardComponent {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
 
-        let b = ctx.props().board.get_board().to_owned();
+        let b = ctx.props().board.get_board().clone();
+
+        let height = self.board.get_height();
+        let width = self.board.get_width();
 
         html! {
             <div class="board">
@@ -51,7 +54,12 @@ impl Component for BoardComponent {
                         <>
                         {row.into_iter().map(|c| {
                             html! {
-                                <Button onsignal={self.link.callback(move |_| Msg::Discover{cell: c})} flagsignal={self.link.callback(move |_| Msg::Flag{cell: c})} cell={c}/>
+                                <Button 
+                                    onsignal={self.link.callback(move |_| Msg::Discover{cell: c})} 
+                                    flagsignal={self.link.callback(move |_| Msg::Flag{cell: c})} 
+                                    cell={c}
+                                    height={height}
+                                    width={width}/>
                             } 
                         }).collect::<Html>()}
                         <br/>
@@ -71,12 +79,13 @@ impl Component for BoardComponent {
                 self.flagsignal.emit(cell);
             }
         }
-        false
+        true
     }
 
     fn changed(&mut self, ctx: &Context<Self>, _old_props: &Self::Properties) -> bool {
         self.board = ctx.props().board.clone();
         self.onsignal = ctx.props().onsignal.clone();
+        self.flagsignal = ctx.props().flagsignal.clone();
         true
     }
 
