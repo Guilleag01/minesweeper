@@ -1,6 +1,8 @@
 pub mod board;
 pub mod cell;
 
+use std::sync::{Arc, Mutex};
+
 use board::Board;
 use cell::Cell;
 use rand::Rng;
@@ -13,6 +15,7 @@ pub struct Game {
     board: Board,
     first_interaction: bool,
     gamestate: usize,
+    time: Arc<Mutex<usize>>,
 }
 
 impl Game {
@@ -21,6 +24,7 @@ impl Game {
             board: Board::new(height, width, num_mines),
             first_interaction: false,
             gamestate: 0,
+            time: Arc::new(Mutex::new(0)),
         }
     }
 
@@ -81,6 +85,7 @@ impl Game {
 
             for k in 0..cells_to_show.len() {
                 let pos = cells_to_show[k];
+
                 for i in -1..=1 {
                     for j in -1..=1 {
                         let new_pos =
@@ -166,5 +171,17 @@ impl Game {
 
     pub fn get_gamestate(&self) -> usize {
         self.gamestate
+    }
+
+    pub fn get_time(&self) -> usize {
+        *self.time.lock().unwrap()
+    }
+
+    pub fn set_time(&mut self, time: usize) {
+        *self.time.lock().unwrap() = time
+    }
+
+    pub fn add_time(&mut self, time: usize) {
+        *self.time.lock().unwrap() += time
     }
 }

@@ -14,6 +14,12 @@ use minesweeper_ui::components::board::BoardComponent;
 
 use minesweeper_ui::minesweeper::{cell::Cell, Game};
 
+// use timer::Timer;
+
+// use chrono::Duration;
+
+// use std::marker::Sync;
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
@@ -28,6 +34,7 @@ pub enum Msg {
     UpdateHeight,
     UpdateWidth,
     UpdateMines,
+    // AddTime { time: usize },
 }
 
 pub struct App {
@@ -37,6 +44,7 @@ pub struct App {
     width: usize,
     num_mines: usize,
     show_settings: bool,
+    // timer: Timer,
 }
 
 impl Component for App {
@@ -45,20 +53,22 @@ impl Component for App {
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
-        let height = 10;
-        let width = 10;
-        let num_mines = height * width / 10;
-
-        let game = Game::new(height, width, 5);
+        let game = Game::new(10, 10, 5);
         // game.start_board();
+
+        // let t = Timer::new();
+        // t.schedule_repeating(Duration::new(1, 0), || {
+        //     Callback(||)
+        // });
 
         Self {
             link: ctx.link().clone(),
             game,
-            height,
-            width,
-            num_mines,
+            height: 10,
+            width: 10,
+            num_mines: 5,
             show_settings: false,
+            // timer: Timer::new(),
         }
     }
 
@@ -84,7 +94,7 @@ impl Component for App {
                             {"Reset"}
                         </button>
                         <div class="time">
-                            {"00:00"}
+                            {self.game.get_time()}
                         </div>
                         <button
                             id="open-settings"
@@ -116,9 +126,9 @@ impl Component for App {
                             </div>
                         </div>
                         <div class="preset-settings">
-                            <button class="preset-setting">{"Easy"}</button>
-                            <button class="preset-setting">{"Normal"}</button>
-                            <button class="preset-setting">{"Hard"}</button>
+                            <button class="preset-setting">{"Easy (WIP)"}</button>
+                            <button class="preset-setting">{"Normal (WIP)"}</button>
+                            <button class="preset-setting">{"Hard (WIP)"}</button>
                         </div>
                     </div>
                 </div>
@@ -153,7 +163,7 @@ impl Component for App {
                 .value();
 
             let re = Regex::new(
-                "^((0+)|((0*)(1|[2-9]|[1-9][0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-8]|999)))$",
+                "^((0+)|(1|[2-9]|[1-9][0-9]|[1-9][0-9]{2}|[1-9][0-9]{3}|[1-9][0-9]{4}|[1-8][0-9]{5}|9[0-8][0-9]{4}|99[0-7][0-9]{3}|998[0--1][0-9]{2}|9980[0--1][0-9]|99800[0-0]|998001))$",
             )
             .unwrap();
             let mut value: usize = self.num_mines;
@@ -182,7 +192,7 @@ impl Component for App {
             }
             Msg::Reset => {
                 self.game = Game::new(self.height, self.width, self.num_mines);
-                // self.game.start_board();
+                self.game.set_time(0);
             }
             Msg::ToggleSettings => {
                 self.show_settings = !self.show_settings;
@@ -203,7 +213,7 @@ impl Component for App {
                     let mines = get_mines();
                     self.num_mines = mines.min(self.height * self.width);
                     self.game = Game::new(self.height, self.width, self.num_mines);
-                    // self.game.start_board();
+                    self.game.set_time(0);
                 }
             }
             Msg::UpdateWidth => {
@@ -222,7 +232,7 @@ impl Component for App {
                     let mines = get_mines();
                     self.num_mines = mines.min(self.height * self.width);
                     self.game = Game::new(self.height, self.width, self.num_mines);
-                    // self.game.start_board();
+                    self.game.set_time(0);
                 }
             }
             Msg::UpdateMines => {
@@ -230,9 +240,11 @@ impl Component for App {
                 if mines <= self.height * self.width {
                     self.num_mines = mines;
                     self.game = Game::new(self.height, self.width, self.num_mines);
-                    // self.game.start_board();
+                    self.game.set_time(0);
                 }
-            }
+            } // Msg::AddTime { time } => {
+              //     self.game.add_time(time);
+              // }
         }
         true
     }
